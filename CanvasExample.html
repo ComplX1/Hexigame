@@ -1,0 +1,95 @@
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>HTML5 Canvas Template</title>
+		<style>
+		/* styles here */
+		</style>
+	</head>
+<body>
+	<canvas id="myCanvas" width="500" height="500" style="border:solid red 1px;">
+		<p>Canvas not supported.</p>
+	</canvas>
+	          
+	<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var canvas = $("#myCanvas").get(0);
+			var ctx = canvas.getContext("2d");
+
+			function renderHex(midpointX, midpointY, size) {
+				var angle = (Math.PI/2)
+				var sides = 6;
+
+
+				ctx.beginPath();
+				ctx.strokeStyle = 'blue';
+				
+				for (i=0;i<sides;i++)
+				{
+					//next we need to move to the top point
+					var newPointX = Math.cos(angle)*size;
+					var newPointY = Math.sin(angle)*size;
+					if (i == 0) {
+						ctx.moveTo(midpointX-newPointX, midpointY-newPointY);
+					}
+
+					ctx.lineTo(midpointX-newPointX, midpointY-newPointY);
+
+					if (i == (sides-1)) {
+						ctx.closePath();
+					}
+
+					angle += (2*Math.PI/sides);
+				}
+
+				ctx.stroke();
+			}
+
+
+			function DrawHexGrid(canvas) {
+				//we need first to get to mid point of the first hex.
+				//we know the hex size is 50
+				var size = 40;
+
+				//work out grid start co-ords
+				var startX = Math.cos((Math.PI/2)-(2*Math.PI/6))*size;
+				var startY = size;
+
+				HexWidth = 2*startX;
+				HexHeight = 2*startY;
+
+				var row = 0;
+
+				var x = startX;
+				var y = startY;
+
+
+				while (y + HexHeight < canvas.height) {
+
+					var offsetX = 0.0;
+					var offsetY = 0.0;
+					
+					if (row % 2 == 1) {
+						offsetX = 0.5 * HexWidth;
+					}
+
+					x += offsetX;
+					y += offsetY;
+
+					while(x + HexWidth < canvas.width) {
+						renderHex(x, y, size);
+						x += HexWidth;
+					}
+
+					row++;
+					x = startX
+					y += ((HexHeight + size)/2)
+				}
+			}
+
+			DrawHexGrid(canvas);
+		});
+	</script>
+</body>
+</html>
